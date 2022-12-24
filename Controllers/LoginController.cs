@@ -43,14 +43,29 @@ namespace LinkShortener.Controllers
                 HttpContext.Session.SetString("admin", infou.admin.ToString());
                 HttpContext.Session.SetString("user", infou.userName.ToString());
                 HttpContext.Session.SetString("pass", infou.password.ToString());
-                var claims = new List<Claim>
+                if (infou.admin == false)
+                {
+                    var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, infou.userName)
                 };
-                var useridentity = new ClaimsIdentity(claims, "Login");
-                ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
-                await HttpContext.SignInAsync(principal);
-                return RedirectToAction("Index", "Home");
+                    var useridentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
+                    await HttpContext.SignInAsync(principal);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+
+                    var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, infou.userName)
+                };
+                    var useridentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
+                    await HttpContext.SignInAsync(principal);
+                    return RedirectToAction("Index", "Admin");
+                }
             }
             return View();
         }

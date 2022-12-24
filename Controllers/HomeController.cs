@@ -80,6 +80,10 @@ namespace LinkShortener.Controllers
                             ShortUrl = $"{ServiceUrl}/{shortCode}",
                             User = user
                         };
+                        userInfo.Urls += 1;
+                        var filter = Builders<User>.Filter.Eq(s => s.userName, user);
+                        var update = Builders<User>.Update.Set(s => s.Urls, userInfo.Urls);
+                        usersCollection.UpdateOneAsync(filter, update);
 
 
                     }
@@ -95,20 +99,28 @@ namespace LinkShortener.Controllers
                             ShortUrl = $"{ServiceUrl}/{speChar}",
                             User = user
                         };
+                        userInfo.Urls += 1;
+                        var filter = Builders<User>.Filter.Eq(s => s.userName, user);
+                        var update = Builders<User>.Update.Set(s => s.Urls, userInfo.Urls);
+                        usersCollection.UpdateOneAsync(filter, update);
                     }
 
                     originalUrl.Click += 1;
-                    var filter = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
-                    var update = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
-                    originalUrlColleciton.UpdateOneAsync(filter, update);
+                    var filter2 = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
+                    var update2 = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
+                    originalUrlColleciton.UpdateOneAsync(filter2, update2);
                     await shortenedUrlCollection.InsertOneAsync(shortenedUrl);
                 }
                 else
                 {
+                    userInfo.Urls += 1;
+                    var filter = Builders<User>.Filter.Eq(s => s.userName, user);
+                    var update = Builders<User>.Update.Set(s => s.Urls, userInfo.Urls);
+                    usersCollection.UpdateOneAsync(filter, update);
                     originalUrl.Click += 1;
-                    var filter = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
-                    var update = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
-                    originalUrlColleciton.UpdateOneAsync(filter, update);
+                    var filter2 = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
+                    var update2 = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
+                    originalUrlColleciton.UpdateOneAsync(filter2, update2);
                 }
             }
             else

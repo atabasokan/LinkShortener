@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LinkShortener.Controllers
@@ -33,8 +37,16 @@ namespace LinkShortener.Controllers
             }
             var usersCollection = _mongoDatabase.GetCollection<User>("users");
             var originalUrlCollection = _mongoDatabase.GetCollection<OriginalUrl>("original-urls");
-            var shortenedUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
-            return View();
+            var users = await usersCollection.Find(Builders<User>.Filter.Eq(x => x.admin, false)).ToListAsync();
+            var orgUrls = await originalUrlCollection.Find(Builders<OriginalUrl>.Filter.Empty).ToListAsync();
+            var mostUrl = orgUrls.OrderByDescending(x => x.Click).FirstOrDefault();
+            var mostUser = users.OrderByDescending(x => x.Urls).FirstOrDefault();
+            ViewBag.Users = users;
+            ViewBag.OriginalUrls = originalUrlCollection;
+            dynamic infos = new ExpandoObject();
+            infos.MostUrl = mostUrl;
+            infos.MostUser = mostUser;
+            return View(infos);
         }
     }
 }

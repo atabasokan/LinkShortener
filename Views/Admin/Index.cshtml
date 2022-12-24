@@ -1,5 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Home Page";
 }
+@model dynamic
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>A url shortener built with ASP.NET Core and Mongo DB</p>
+</div>
+
+<div style="width: 100%; margin-top: 60px;">
+    <div style="width: 65%; margin-left: auto; margin-right: auto;">
+        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+            <thead class="text-center">
+            <th class="text-center">Kullanıcı Adı</th>
+            <th class="text-center">Admin Yetkisi</th>
+            <th class="text-center">Kısaltma Sayısı</th>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Users)
+                {
+
+                    <tr class="text-center">
+                        <td class="text-center">@item.userName</td>
+                        <td class="text-center">@item.admin</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+            <thead class="text-center">
+            <th class="text-center">Asıl Url</th>
+            <th class="text-center">Click</th>
+            </thead>
+            <tbody>
+                @foreach (OriginalUrl item in Model.MostUrl)
+                {
+                        <tr class="text-center">
+                            <td class="text-center">@item.title</td>
+                            <td class="text-center">@item.Click</td>
+                        </tr>                    
+                }
+            </tbody>
+        </table>
+        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+            <thead class="text-center">
+            <th class="text-center">Kullanıcı Adı</th>
+            <th class="text-center">Kısaltma</th>
+            </thead>
+            <tbody>
+                @foreach (User item in Model.User)
+                {
+                        <tr class="text-center">
+                            <td class="text-center">@item.userName</td>
+                            <td class="text-center">@item.Urls</td>
+                        </tr>                    
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
