@@ -1,0 +1,39 @@
+﻿@model LinkShortener.Models.User
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+    <div class="wrapper wrapper--w780">
+        <div class="card card-3">
+            <div class="card-heading"></div>
+            <div class="card-body">
+                <div style="backdrop-filter: blur(3.5px); padding: 0% 5% 0% 5%;">
+                    <h2 class="title">Giriş Bilgileri</h2>
+                    @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { enctype = "multipart/form-daya" }))
+                    {
+                        <div class="input-group">
+                            <input asp-for="userName" class="input--style-3" type="text" placeholder="Kullanıcı Adı" name="userName" />
+                        </div>
+                        <div class="input-group">
+                            <input asp-for="password" class="input--style-3" type="password" placeholder="Şifre" name="password" />
+                        </div>
+                        <div class="p-t-10">
+                            <input class="btn btn--pill align-content-center" type="submit" value="Giriş Yap" />
+                        </div>
+                        <div class="p-t-10">
+                            <a class="btn btn--pill align-content-center" type="submit" href="SignUp/Index">Kayıt Ol</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" language="javascript">
+
+    $(function () {
+        $("#birthday").datepicker({ maxDate: new Date() });
+    });
+</script>
