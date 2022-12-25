@@ -23,10 +23,10 @@
                     @using (Html.BeginForm("Index", "SignUp", FormMethod.Post, new { enctype = "multipart/form-daya" }))
                     {
                         <div class="input-group" style="padding-top:5px">
-                            <input asp-for="userName" class="input--style-3 form-control" type="text" placeholder="Ad" name="userName" />
+                            <input asp-for="userName" class="input--style-3 form-control" type="text" placeholder="Kullanıcı Adı Giriniz..." name="userName" />
                         </div>
                         <div class="input-group" style="padding-top:5px">
-                            <input asp-for="password" class="input--style-3 form-control" type="password" placeholder="Şifre" name="password" />
+                            <input asp-for="password" class="input--style-3 form-control" type="password" placeholder="Şifre Giriniz..." name="password" />
                         </div>
                         <div class="p-t-10" style="padding-top:5px">
                             <button class="btn btn-primary align-content-center" type="submit">Kayıt Ol</button>
