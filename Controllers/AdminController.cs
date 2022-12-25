@@ -36,13 +36,13 @@ namespace LinkShortener.Controllers
                 return RedirectToAction("Index", "Login");
             }
             var usersCollection = _mongoDatabase.GetCollection<User>("users");
-            var originalUrlCollection = _mongoDatabase.GetCollection<OriginalUrl>("original-urls");
+            var shortlUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
             var users = await usersCollection.Find(Builders<User>.Filter.Eq(x => x.admin, false)).ToListAsync();
-            var orgUrls = await originalUrlCollection.Find(Builders<OriginalUrl>.Filter.Empty).ToListAsync();
-            var mostUrl = orgUrls.OrderByDescending(x => x.Click).Take(1);
+            var shortUrls = await shortlUrlCollection.Find(Builders<ShortenedUrl>.Filter.Empty).ToListAsync();
+            var mostUrl = shortUrls.OrderByDescending(x => x.Click).Take(1);
             var mostUser = users.OrderByDescending(n => n.Urls).Take(1);
             ViewBag.Users = users;
-            ViewBag.OriginalUrls = originalUrlCollection;
+            ViewBag.shortUrls = shortUrls;
             dynamic infos = new ExpandoObject();
             infos.MostUrl = mostUrl;
             infos.MostUser = mostUser;

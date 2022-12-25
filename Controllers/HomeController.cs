@@ -78,7 +78,8 @@ namespace LinkShortener.Controllers
                             SpeChar = "",
                             LastDay = DateTime.UtcNow.AddDays(lastDay),
                             ShortUrl = $"{ServiceUrl}/{shortCode}",
-                            User = user
+                            User = user,
+                            Click = 1
                         };
                         userInfo.Urls += 1;
                         var filter = Builders<User>.Filter.Eq(s => s.userName, user);
@@ -97,18 +98,14 @@ namespace LinkShortener.Controllers
                             SpeChar = speChar,
                             LastDay = DateTime.UtcNow.AddDays(lastDay),
                             ShortUrl = $"{ServiceUrl}/{speChar}",
-                            User = user
+                            User = user,
+                            Click = 1
                         };
                         userInfo.Urls += 1;
                         var filter = Builders<User>.Filter.Eq(s => s.userName, user);
                         var update = Builders<User>.Update.Set(s => s.Urls, userInfo.Urls);
                         usersCollection.UpdateOneAsync(filter, update);
                     }
-
-                    originalUrl.Click += 1;
-                    var filter2 = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
-                    var update2 = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
-                    originalUrlColleciton.UpdateOneAsync(filter2, update2);
                     await shortenedUrlCollection.InsertOneAsync(shortenedUrl);
                 }
                 else
@@ -117,10 +114,6 @@ namespace LinkShortener.Controllers
                     var filter = Builders<User>.Filter.Eq(s => s.userName, user);
                     var update = Builders<User>.Update.Set(s => s.Urls, userInfo.Urls);
                     usersCollection.UpdateOneAsync(filter, update);
-                    originalUrl.Click += 1;
-                    var filter2 = Builders<OriginalUrl>.Filter.Eq(s => s.title, shortenedUrl.OriginalUrl);
-                    var update2 = Builders<OriginalUrl>.Update.Set(s => s.Click, originalUrl.Click);
-                    originalUrlColleciton.UpdateOneAsync(filter2, update2);
                 }
             }
             else
@@ -136,12 +129,12 @@ namespace LinkShortener.Controllers
                         SpeChar = "",
                         LastDay = DateTime.UtcNow.AddDays(lastDay),
                         ShortUrl = $"{ServiceUrl}/{shortCode}",
-                        User = user
+                        User = user,
+                        Click = 1
                     };
                     originalUrl = new OriginalUrl
                     {
-                        title = longUrl,
-                        Click = 1
+                        title = longUrl
                     };
                     userInfo.Urls += 1;
                     var filter = Builders<User>.Filter.Eq(s => s.userName, user);
@@ -159,12 +152,12 @@ namespace LinkShortener.Controllers
                         SpeChar = speChar,
                         LastDay = DateTime.UtcNow.AddDays(lastDay),
                         ShortUrl = $"{ServiceUrl}/{speChar}",
-                        User = user
+                        User = user,
+                        Click = 1
                     };
                     originalUrl = new OriginalUrl
                     {
-                        title = longUrl,
-                        Click = 1
+                        title = longUrl
                     };
                     userInfo.Urls += 1;
                     var filter = Builders<User>.Filter.Eq(s => s.userName, user);
@@ -185,6 +178,21 @@ namespace LinkShortener.Controllers
                 "abcdefghijklmnopqrstuvwxyz" +
                 "0123456789";
             return new string(alphanumericCharacters.Select(c => alphanumericCharacters[random.Next(alphanumericCharacters.Length)]).Take(6).ToArray());
+        }
+        public async Task<IActionResult> ClickCounter(string orgUrl)
+        {
+            string user = HttpContext.Session.GetString("user");
+            var shortenedUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
+            var shortenedUrl = await shortenedUrlCollection.AsQueryable().FirstOrDefaultAsync(x => x.OriginalUrl == orgUrl && x.User == user);
+            shortenedUrl.Click += 1;
+            var filter = Builders<ShortenedUrl>.Filter.And
+                (
+                    Builders<ShortenedUrl>.Filter.Where(x => x.User == user),
+                    Builders<ShortenedUrl>.Filter.Where(x => x.OriginalUrl == orgUrl)
+                );
+            var update = Builders<ShortenedUrl>.Update.Set(s => s.Click, shortenedUrl.Click);
+            shortenedUrlCollection.UpdateOneAsync(filter, update);
+            return Redirect(shortenedUrl.OriginalUrl);
         }
     }
 }

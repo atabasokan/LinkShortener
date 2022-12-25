@@ -14,6 +14,7 @@ namespace LinkShortener.Models
         public DateTime CreatedAt { get; set; }
         public DateTime LastDay { get; set;}
         public string User { get; set; }
+        public int Click { get; set; }
         public string? SpeChar { get; set; }
     }
 }
