@@ -4,6 +4,56 @@
     ViewData["Title"] = "Giriş Yap";
 }
 
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">
+
+
+
+            <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+                <div class="wrapper wrapper--w780">
+                    <div class="card card-3">
+                        <div class="card-heading"></div>
+                        <div class="card-body">
+                            <div style="backdrop-filter: blur(3.5px); padding: 0% 5% 0% 5%;">
+                                <h2 class="title">Giriş Bilgileri</h2>
+                                @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { enctype = "multipart/form-daya" }))
+                                {
+                                    <div class="input-group" style="padding-top:5px">
+                                        <input asp-for="userName" class="input--style-3 form-control" type="text" placeholder="Kullanıcı Adı" name="userName" />
+                                    </div>
+                                    <div class="input-group" style="padding-top:5px">
+                                        <input asp-for="password" class="input--style-3 form-control" type="password" placeholder="Şifre" name="password" />
+                                    </div>
+                                    <div class="p-t-10" style="padding-top:5px">
+                                        <input class="btn btn-primary align-content-center" type="submit" value="Giriş Yap" />
+                                    </div>
+                                    <div class="p-t-10" style="padding-top:5px">
+                                        <a class="btn btn-outline-warning align-content-center"  type="submit" href="SignUp/Index">Kayıt Ol</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-sm"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@*
 <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
     <div class="wrapper wrapper--w780">
         <div class="card card-3">
@@ -31,6 +81,8 @@
         </div>
     </div>
 </div>
+*@
+
 <script type="text/javascript" language="javascript">
 
     $(function () {

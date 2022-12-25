@@ -4,6 +4,14 @@
     ViewData["Title"] = "Kayıt Ol";
 }
 
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">
+
+
+
 <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
     <div class="wrapper wrapper--w780">
         <div class="card card-3">
@@ -14,18 +22,23 @@
                     <span class="text-danger">@TempData["ErrorMes"]</span>
                     @using (Html.BeginForm("Index", "SignUp", FormMethod.Post, new { enctype = "multipart/form-daya" }))
                     {
-                        <div class="input-group">
-                            <input asp-for="userName" class="input--style-3" type="text" placeholder="Ad" name="userName" />
+                        <div class="input-group" style="padding-top:5px">
+                            <input asp-for="userName" class="input--style-3 form-control" type="text" placeholder="Ad" name="userName" />
                         </div>
-                        <div class="input-group">
-                            <input asp-for="password" class="input--style-3" type="password" placeholder="Şifre" name="password" />
+                        <div class="input-group" style="padding-top:5px">
+                            <input asp-for="password" class="input--style-3 form-control" type="password" placeholder="Şifre" name="password" />
                         </div>
-                        <div class="p-t-10">
-                            <button class="btn btn--pill align-content-center" type="submit">Kayıt Ol</button>
+                        <div class="p-t-10" style="padding-top:5px">
+                            <button class="btn btn-primary align-content-center" type="submit">Kayıt Ol</button>
                         </div>
                     }
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+        </div>
+        <div class="col-sm"></div>
     </div>
 </div>
