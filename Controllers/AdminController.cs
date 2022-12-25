@@ -39,8 +39,8 @@ namespace LinkShortener.Controllers
             var originalUrlCollection = _mongoDatabase.GetCollection<OriginalUrl>("original-urls");
             var users = await usersCollection.Find(Builders<User>.Filter.Eq(x => x.admin, false)).ToListAsync();
             var orgUrls = await originalUrlCollection.Find(Builders<OriginalUrl>.Filter.Empty).ToListAsync();
-            var mostUrl = orgUrls.OrderByDescending(x => x.Click).FirstOrDefault();
-            var mostUser = users.OrderByDescending(x => x.Urls).FirstOrDefault();
+            var mostUrl = orgUrls.OrderByDescending(x => x.Click).Take(1);
+            var mostUser = users.OrderByDescending(n => n.Urls).Take(1);
             ViewBag.Users = users;
             ViewBag.OriginalUrls = originalUrlCollection;
             dynamic infos = new ExpandoObject();

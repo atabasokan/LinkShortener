@@ -22,6 +22,7 @@
                     <tr class="text-center">
                         <td class="text-center">@item.userName</td>
                         <td class="text-center">@item.admin</td>
+                        <td class="text-center">@item.Urls</td>
                     </tr>
                 }
             </tbody>
@@ -34,10 +35,10 @@
             <tbody>
                 @foreach (OriginalUrl item in Model.MostUrl)
                 {
-                        <tr class="text-center">
-                            <td class="text-center">@item.title</td>
-                            <td class="text-center">@item.Click</td>
-                        </tr>                    
+                    <tr class="text-center">
+                        <td class="text-center">@item.title</td>
+                        <td class="text-center">@item.Click</td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -47,12 +48,12 @@
             <th class="text-center">Kısaltma</th>
             </thead>
             <tbody>
-                @foreach (User item in Model.User)
+                @foreach (User item in Model.MostUser)
                 {
-                        <tr class="text-center">
-                            <td class="text-center">@item.userName</td>
-                            <td class="text-center">@item.Urls</td>
-                        </tr>                    
+                    <tr class="text-center">
+                        <td class="text-center">@item.userName</td>
+                        <td class="text-center">@item.Urls</td>
+                    </tr>
                 }
             </tbody>
         </table>
