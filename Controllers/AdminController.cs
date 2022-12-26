@@ -31,22 +31,26 @@ namespace LinkShortener.Controllers
         public async Task<IActionResult> Index()
         {
             var admin = HttpContext.Session.GetString("admin");
-            if (admin == "False")
+            if (admin != null)
             {
-                return RedirectToAction("Index", "Login");
+                if (admin == "False")
+                {
+                    return RedirectToAction("LogOut", "Login");
+                }
+                var usersCollection = _mongoDatabase.GetCollection<User>("users");
+                var shortlUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
+                var users = await usersCollection.Find(Builders<User>.Filter.Eq(x => x.admin, false)).ToListAsync();
+                var shortUrls = await shortlUrlCollection.Find(Builders<ShortenedUrl>.Filter.Empty).ToListAsync();
+                var mostUrl = shortUrls.OrderByDescending(x => x.Click).Take(1);
+                var mostUser = users.OrderByDescending(n => n.Urls).Take(1);
+                ViewBag.Users = users;
+                ViewBag.shortUrls = shortUrls;
+                dynamic infos = new ExpandoObject();
+                infos.MostUrl = mostUrl;
+                infos.MostUser = mostUser;
+                return View(infos);
             }
-            var usersCollection = _mongoDatabase.GetCollection<User>("users");
-            var shortlUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
-            var users = await usersCollection.Find(Builders<User>.Filter.Eq(x => x.admin, false)).ToListAsync();
-            var shortUrls = await shortlUrlCollection.Find(Builders<ShortenedUrl>.Filter.Empty).ToListAsync();
-            var mostUrl = shortUrls.OrderByDescending(x => x.Click).Take(1);
-            var mostUser = users.OrderByDescending(n => n.Urls).Take(1);
-            ViewBag.Users = users;
-            ViewBag.shortUrls = shortUrls;
-            dynamic infos = new ExpandoObject();
-            infos.MostUrl = mostUrl;
-            infos.MostUser = mostUser;
-            return View(infos);
+            return RedirectToAction("LogOut", "Login");
         }
     }
 }

@@ -27,28 +27,31 @@ namespace LinkShortener.Controllers
             _mongoDatabase = mongoClient.GetDatabase("LinkShortener");
         }
         [Authorize]
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string user)
         {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index(string u)
-        {
+            user = HttpContext.Session.GetString("user");
             var userUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
-            var userUrl = userUrlCollection.AsQueryable().Where(x => x.User == HttpContext.Session.GetString("user"));
-            var shortenedUrlCollection = _mongoDatabase.GetCollection<ShortenedUrl>("shortened-urls");
-            var shortenedUrl = await shortenedUrlCollection
-                .AsQueryable()
-                .FirstOrDefaultAsync(x => x.ShortCode == u);
-
-            if (shortenedUrl == null)
+            var userUrl = userUrlCollection.AsQueryable().Where(x => x.User == user);
+            var links = await userUrlCollection.Find(Builders<ShortenedUrl>.Filter.Eq(x => x.User, user)).ToListAsync();
+            if (user != null)
             {
+                foreach (var item in userUrl)
+                {
+                    if (item.LastDay < DateTime.Now)
+                    {
+                        var filter = Builders<ShortenedUrl>.Filter.And(
+                        Builders<ShortenedUrl>.Filter.Where(x => x.User == item.User),
+                        Builders<ShortenedUrl>.Filter.Where(x => x.OriginalUrl == item.OriginalUrl)
+                        );
+                        userUrlCollection.DeleteOneAsync(filter);
+                    }
+                }
                 ViewBag.UserUrls = userUrl;
                 return View();
             }
-            return Redirect(shortenedUrl.OriginalUrl);
+
+            return RedirectToAction("LogOut", "Login");
+
         }
 
         [HttpPost]
