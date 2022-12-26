@@ -17,7 +17,7 @@ namespace LinkShortener.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IConfiguration _configuration;
-        private const string ServiceUrl = "https://localhost:5000";
+        private const string ServiceUrl = "http://linkshortener-dev.eba-csrgruii.eu-central-1.elasticbeanstalk.com/";
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
