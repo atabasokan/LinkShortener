@@ -18,7 +18,6 @@ namespace LinkShortener.Controllers
         private readonly ILogger<LoginController> _logger;
         private readonly IMongoDatabase _mongoDatabase;
         private readonly IConfiguration _configuration;
-        private readonly IMongoCollection<User> _users;
         public LoginController(ILogger<LoginController> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -31,6 +30,7 @@ namespace LinkShortener.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            HttpContext.Session.Clear();
             return View();
         }
 
