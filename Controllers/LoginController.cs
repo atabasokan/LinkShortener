@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LinkShortener.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace LinkShortener.Controllers
 {
@@ -68,6 +69,12 @@ namespace LinkShortener.Controllers
                 }
             }
             return View();
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Login");
         }
     }
 }

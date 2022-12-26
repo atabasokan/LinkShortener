@@ -8,7 +8,6 @@ namespace LinkShortener.Models
         [BsonId]
         public ObjectId Id { get; set; }
         public string title { get; set; }
-        public int Click { get; set; }
 
     }
 }

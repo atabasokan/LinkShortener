@@ -43,7 +43,7 @@
 
                     <tr class="text-center">
                         <td class="text-center">@item.OriginalUrl</td>
-                        <td class="text-center">@item.ShortUrl</td>
+                        <td class="text-center"><a href="@Url.Action("ClickCounter","Home", new { orgUrl = item.OriginalUrl})">@item.ShortUrl</a></td>
                         <td class="text-center">@item.LastDay</td>
                     </tr>
                 }
