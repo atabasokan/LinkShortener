@@ -1,124 +1,419 @@
 ﻿@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
     ViewData["Title"] = "Home Page";
 }
 @model dynamic
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>A url shortener built with ASP.NET Core and Mongo DB</p>
+    <h1 class="display-4">Kullanıcı - Link Verileri</h1>
 </div>
 
-<div style="width: 100%; margin-top: 60px;">
-    <div style="width: 65%; margin-left: auto; margin-right: auto;">
-        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
-            <thead class="text-center">
-            <th class="text-center">Kullanıcı Adı</th>
-            <th class="text-center">Admin Yetkisi</th>
-            <th class="text-center">Kısaltma Sayısı</th>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.Users)
-                {
+<style>
+    .main-wrapper .btn, .main-wrapper .browser-stats table th, .main-wrapper .browser-stats table td {
+        text-align: center;
+        vertical-align: middle;
+    }
 
-                    <tr class="text-center">
-                        <td class="text-center">@item.userName</td>
-                        <td class="text-center">@item.admin</td>
-                        <td class="text-center">@item.Urls</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
-            <thead class="text-center">
-            <th class="text-center">Kullanıcı Adı</th>
-            <th class="text-center">Asıl Url</th>
-            <th class="text-center">Kısaltılmış Url</th>
-            <th class="text-center">Tıklama Sayısı</th>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.shortUrls)
-                {
-                    <tr class="text-center">
-                        <td class="text-center">@item.User</td>
-                        <td class="text-center">@item.OriginalUrl</td>
-                        <td class="text-center">@item.ShortUrl</td>
-                        <td class="text-center">@item.Click</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
-            <thead class="text-center">
-            <th class="text-center">Kullanıcı</th>
-            <th class="text-center">Asıl Url</th>
-            <th class="text-center">Kısaltılmış Url</th>
-            <th class="text-center">Tıklama Sayısı</th>
-            </thead>
-            <tbody>
-                @foreach (ShortenedUrl item in Model.MostUrl)
-                {
-                    <tr class="text-center">
-                        <td class="text-center">@item.User</td>
-                        <td class="text-center">@item.OriginalUrl</td>
-                        <td class="text-center">@item.ShortUrl</td>
-                        <td class="text-center">@item.Click</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
-            <thead class="text-center">
-            <th class="text-center">Kullanıcı Adı</th>
-            <th class="text-center">Kısaltma</th>
-            </thead>
-            <tbody>
-                @foreach (User item in Model.MostUser)
-                {
-                    <tr class="text-center">
-                        <td class="text-center">@item.userName</td>
-                        <td class="text-center">@item.Urls</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+    *, :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 
-<div class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header">
-                Pie Chart
-            </div>
-            <div class="card-body">
-                <canvas class="my-4 h-25" id="pie"></canvas>
-            </div>
+    body {
+        background-color: #f0f3f7;
+        line-height: 1.42857143;
+        margin: 0;
+    }
+
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+        .container:before, .container:after {
+            display: table;
+            content: "";
+        }
+
+        .container:after {
+            clear: both;
+        }
+
+    .main-wrapper {
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+        color: #333;
+    }
+
+        .main-wrapper .btn {
+            display: inline-block;
+            line-height: 1.42857143;
+            white-space: nowrap;
+            margin-left: 8px;
+            padding: 3px 9px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background-color: #656d78;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+            width: 30px;
+            color: white;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+            .main-wrapper .btn[class*='fast'] {
+                background-color: #434a54;
+            }
+
+            .main-wrapper .btn.disabled {
+                pointer-events: none;
+                cursor: not-allowed;
+                color: #bbb;
+                opacity: 0.65;
+            }
+
+            .main-wrapper .btn > .fa {
+                font-size: 18px;
+            }
+
+        .main-wrapper .information {
+            margin-bottom: 20px;
+        }
+
+            .main-wrapper .information h1 {
+                font-family: 'Lato', sans-serif;
+                font-weight: bold;
+                color: #009189;
+            }
+
+            .main-wrapper .information a {
+                color: #009789;
+                text-decoration: none;
+            }
+
+                .main-wrapper .information a:hover {
+                    color: #0f7b60;
+                    text-decoration: none;
+                }
+
+        .main-wrapper .browser-stats {
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+            .main-wrapper .browser-stats table {
+                background-color: white;
+                color: #868686;
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+                .main-wrapper .browser-stats table .header {
+                    font-weight: 600;
+                }
+
+                .main-wrapper .browser-stats table th {
+                    background-color: #009189;
+                    color: white;
+                    font-size: 15px;
+                    padding: 15px;
+                }
+
+                .main-wrapper .browser-stats table td {
+                    padding: 10px 15px;
+                }
+
+                    .main-wrapper .browser-stats table td.header {
+                        background-color: #eee;
+                        color: #333;
+                    }
+</style>
+<div class="main-wrapper">
+    <div class="container">
+        <div class="browser-stats">
+            <div id="Piechart_div"></div>
+        </div>
+
+        <div class="browser-stats">
+            <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+                <thead class="text-center">
+                <th class="text-center">Kullanıcı Adı</th>
+                <th class="text-center">Asıl Url</th>
+                <th class="text-center">Kısaltılmış Url</th>
+                <th class="text-center">Tıklama Sayısı</th>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.shortUrls)
+                    {
+                        <tr class="text-center">
+                            <td class="text-center">@item.User</td>
+                            <td class="text-center">@item.OriginalUrl</td>
+                            <td class="text-center">@item.ShortUrl</td>
+                            <td class="text-center">@item.Click</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="browser-stats">
+            <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+                <thead class="text-center">
+                <th class="text-center">Kullanıcı</th>
+                <th class="text-center">Asıl Url</th>
+                <th class="text-center">Kısaltılmış Url</th>
+                <th class="text-center">Tıklama Sayısı</th>
+                </thead>
+                <tbody>
+                    @foreach (ShortenedUrl item in Model.MostUrl)
+                    {
+                        <tr class="text-center">
+                            <td class="text-center">@item.User</td>
+                            <td class="text-center">@item.OriginalUrl</td>
+                            <td class="text-center">@item.ShortUrl</td>
+                            <td class="text-center">@item.Click</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="browser-stats">
+            <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+                <thead class="text-center">
+                <th class="text-center">Kullanıcı Adı</th>
+                <th class="text-center">Kısaltma</th>
+                </thead>
+                <tbody>
+                    @foreach (User item in Model.MostUser)
+                    {
+                        <tr class="text-center">
+                            <td class="text-center">@item.userName</td>
+                            <td class="text-center">@item.Urls</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js" integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script type="text/javascript">
-    var piechart = '@ViewBag.shortUrls';
-    piechart.forEach(mypiechart)
-    var mypiechart= new Chart(piechart,{
-    type: 'pie',
-    data: {
-        labels:@Html.Raw(ViewBag.Exponate),
-        datasets: [{
-            label: 'Bar Chart',
-            data: [100,200,300],
-                backgroundColor: 'rgba(19, 75, 95, 1)'
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks:{
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
+@section Scripts{
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-})
-</script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                url: '@Url.Action("InfoChart", "Admin")',
+                success: function (result) {
+                    google.charts.load('current', {
+                        'packages': ['corechart']
+                    });
+                    google.charts.setOnLoadCallback(function () {
+                        drawChart(result);
+                    });
+                }
+            });
+        });
+
+        function drawChart(result) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'userName');
+            data.addColumn('number', 'Urls');
+            var dataArray = [];
+
+            $.each(result, function (i, obj) {
+                dataArray.push([obj.userName, obj.urls]);
+            });
+            data.addRows(dataArray);
+
+            var columnChartOptions = {
+                title: "Kullanıcı - Kısaltma Grafiği",
+                width: 1000,
+                height: 400,
+                bar: { groupWidth: "20%" },
+            };
+
+            var columnChart = new google.visualization.PieChart(document
+                .getElementById('Piechart_div'));
+
+            columnChart.draw(data, columnChartOptions);
+        }
+
+        var totalShow = 0;
+        $(document).ready(function () {
+            changeTotalShow();
+            changeTableSize();
+            changeTableColumn();
+            disablePaginationBtn();
+        });
+
+        $(window).resize(function () {
+            changeTotalShow();
+            changeTableSize();
+            disablePaginationBtn();
+        });
+
+        function changeTotalShow() {
+            if ($(window).width() < 992 && $(window).width() > 767) {
+                totalShow = 3;
+            } else if ($(window).width() >= 992) {
+                totalShow = 6;
+            }
+        }
+
+        function changeTableSize() {
+            if ($(window).width() <= 767) {
+                var tableHead = $(".browser-stats > table > thead > tr > th").find($(".month"));
+                var i = 0;
+                $(".browser-stats > table > tbody > tr > td+td").each(function () {
+                    if (i < $(tableHead).length) {
+                        if (!$(this).hasClass("cloned")) {
+                            $(tableHead[i]).clone().prependTo($(this));
+                            $(this).addClass("cloned");
+                            i++;
+                        }
+                    } else {
+                        if (!$(this).hasClass("cloned")) {
+                            i = i - $(tableHead).length;
+                            $(tableHead[i]).clone().prependTo($(this));
+                            $(this).addClass("cloned");
+                            i++;
+                        }
+                    }
+                });
+                $(".browser-stats > table > tbody > tr > td").find($(".month")).replaceWith(function () {
+                    return $('<div/>', {
+                        class: 'month',
+                        html: this.innerHTML
+                    });
+                })
+                $(".browser-stats > table > tbody > tr > td+td").show();
+            } else {
+                //Display first 6 or 3 columns when the screen is bigger than 767px depending on screen size
+                var firstMonth = $(".browser-stats > table > thead > tr > th+th").first().data("month");
+                var monthLimit = firstMonth - totalShow;
+                var thisMonth = 0;
+                $(".browser-stats > table > thead > tr > th+th").each(function () {
+                    thisMonth = $(this).data("month");
+                    if (thisMonth > monthLimit) {
+                        $(".browser-stats > table").find("[data-month='" + thisMonth + "']").show();
+                    } else {
+                        $(".browser-stats > table").find("[data-month='" + thisMonth + "']").hide();
+                    }
+                });
+                var monthLength = $(".browser-stats > table > thead > tr > th+th").length;
+                if (monthLength <= totalShow) {
+                    $(".main-wrapper .pagination").hide();
+                } else {
+                    $(".main-wrapper .pagination").show();
+                }
+            }
+        }
+
+        //Script for buttons that will change table columns being displayed
+        function changeTableColumn() {
+            var month = 0;
+            var monthShow = 0;
+            var monthHide = 0;
+            var lastMonth = $(".browser-stats > table > thead > tr > th+th").last();
+            var firstMonth = $(".browser-stats > table > thead > tr > th+th").first();
+            $(".backward-btn").click(function () {
+                if (!$(lastMonth).is(":visible")) {
+                    month = $(".browser-stats > table > thead > tr > th+th:visible").last().data("month");
+                    monthHide = month + (totalShow - 1);
+                    $(".browser-stats > table").find("[data-month='" + monthHide + "']").hide();
+                    monthShow = month - 1;
+                    $(".browser-stats > table").find("[data-month='" + monthShow + "']").show();
+                }
+                disablePaginationBtn();
+            });
+
+            $(".fastbackward-btn").click(function () {
+                if (!$(lastMonth).is(":visible")) {
+                    month = $(lastMonth).data("month");
+                    monthLimit = month + totalShow;
+                    $(".browser-stats > table > thead > tr > th+th").each(function () {
+                        monthShow = $(this).data("month");
+                        if (monthShow < monthLimit) {
+                            $(".browser-stats > table").find("[data-month='" + monthShow + "']").show();
+                        } else {
+                            monthHide = monthShow;
+                            $(".browser-stats > table").find("[data-month='" + monthHide + "']").hide();
+                        }
+                    });
+                }
+                disablePaginationBtn();
+            });
+
+            $(".forward-btn").click(function () {
+                if (!$(firstMonth).is(":visible")) {
+                    month = $(".browser-stats > table > thead > tr > th+th:visible").last().data("month");
+                    monthShow = month + totalShow;
+                    $(".browser-stats > table").find("[data-month='" + monthShow + "']").show();
+                    monthHide = month;
+                    $(".browser-stats > table").find("[data-month='" + monthHide + "']").hide();
+                }
+                disablePaginationBtn();
+            });
+
+            $(".fastforward-btn").click(function () {
+                if (!$(firstMonth).is(":visible")) {
+                    month = $(firstMonth).data("month");
+                    monthLimit = month - totalShow;
+                    $(".browser-stats > table > thead > tr > th+th").each(function () {
+                        monthShow = $(this).data("month");
+                        if (monthShow > monthLimit) {
+                            $(".browser-stats > table").find("[data-month='" + monthShow + "']").show();
+                        } else {
+                            monthHide = monthShow;
+                            $(".browser-stats > table").find("[data-month='" + monthHide + "']").hide();
+                        }
+                    });
+                }
+                disablePaginationBtn();
+            });
+        }
+
+        //Disable and enable column buttons script
+        function disablePaginationBtn() {
+            var lastMonth = $(".browser-stats > table > thead > tr > th+th").last();
+            var firstMonth = $(".browser-stats > table > thead > tr > th+th").first();
+            if ($(lastMonth).is(":visible")) {
+                $("a.backward-btn").addClass("disabled");
+                $("a.fastbackward-btn").addClass("disabled");
+                $("a.forward-btn").removeClass("disabled");
+                $("a.fastforward-btn").removeClass("disabled");
+            } else if ($(firstMonth).is(":visible")) {
+                $("a.forward-btn").addClass("disabled");
+                $("a.fastforward-btn").addClass("disabled");
+                $("a.backward-btn").removeClass("disabled");
+                $("a.fastbackward-btn").removeClass("disabled");
+            } else {
+                $("a.backward-btn").removeClass("disabled");
+                $("a.fastbackward-btn").removeClass("disabled");
+                $("a.forward-btn").removeClass("disabled");
+                $("a.fastforward-btn").removeClass("disabled");
+            }
+        }
+    </script>
+}
+
+
+
+
+

@@ -20,9 +20,6 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">URL Kısalt</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LogOut">Çıkış Yap</a>
                         </li>
                     </ul>
@@ -36,14 +33,43 @@
         </main>
     </div>
 
+    <br>
+    
+    <br>
+
     <footer class="border-top footer text-muted">
         <div class="container">
-          <a>2022 - LinkShortener</a>
+            <a> 2022 - LinkShortener </a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                exportEnabled: true,
+                animationEnabled: true,
+                title: {
+                    text: "Automotive Semiconductor Vendors 2015",
+                    fontSize: 21
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 160,
+                    toolTipContent: "<b>{label}</b>: {y}%",
+                    indexLabel: "{label} - {y}%",
+                    dataPoints: @Html.Raw(ViewBag.shortUrls)
+                }]
+            });
+            chart.render();
+
+        }
+    </script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
