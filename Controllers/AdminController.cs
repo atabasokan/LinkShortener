@@ -52,5 +52,27 @@ namespace LinkShortener.Controllers
             }
             return RedirectToAction("LogOut", "Login");
         }
+
+        public async Task<IActionResult> InfoChart()
+        {
+            return Json(ClickList());
+        }
+
+        public List<User> ClickList()
+        {
+            List<User> cs = new List<User>();
+            var userCollection = _mongoDatabase.GetCollection<User>("users");
+            var users = userCollection.Find(Builders<User>.Filter.Empty).ToList();
+
+            foreach (var item in users)
+            {
+                cs.Add(new User()
+                {
+                    userName = item.userName,
+                    Urls = item.Urls
+                });
+            }
+            return cs;
+        }
     }
 }
